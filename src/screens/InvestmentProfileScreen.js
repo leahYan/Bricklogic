@@ -14,7 +14,7 @@ import BudgetSlider from '../components/BudgetSlider';
 import CurrencyInput from '../components/CurrencyInput';
 import LocationInput from '../components/LocationInput';
 import RadioButton from '../components/RadioButton';
-import { estimateBorrowingCapacity, formatCurrency, parseCurrency, validateFinancialInput } from '../services/FinancialService';
+import { estimateBorrowingCapacity, parseCurrency, validateFinancialInput } from '../services/FinancialService';
 
 const InvestmentProfileScreen = ({ navigation }) => {
   // State for form values
