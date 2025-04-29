@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="2048" viewBox="0 0 2048 2048">
+  <rect width="2048" height="2048" fill="#ffffff"/>
+  <text x="1024" y="1024" font-family="Arial" font-size="120" text-anchor="middle" fill="#4a90e2" font-weight="bold">Bricklogic</text>
+  <rect x="724" y="1124" width="600" height="20" fill="#4a90e2"/>
+  <text x="1024" y="1200" font-family="Arial" font-size="60" text-anchor="middle" fill="#666666">Property Investment App</text>
+</svg>
