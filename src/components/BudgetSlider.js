@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, PanResponder, Animated } from 'react-native';
 
 const BudgetSlider = ({ minValue = 100000, maxValue = 1000000, initialValue = 500000, onValueChange }) => {
   const [value, setValue] = useState(initialValue);
   const [sliderWidth, setSliderWidth] = useState(0);
-  const pan = new Animated.Value(0);
+  const pan = useRef(new Animated.Value(0)).current;
+  const panOffset = useRef(0);
 
   // Format currency
   const formatCurrency = (value) => {
@@ -24,33 +25,53 @@ const BudgetSlider = ({ minValue = 100000, maxValue = 1000000, initialValue = 50
   };
 
   // Set up pan responder for the slider thumb
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderGrant: () => {
-      pan.setOffset(pan._value);
-      pan.setValue(0);
-    },
-    onPanResponderMove: (_, gesture) => {
-      const newPosition = Math.max(0, Math.min(sliderWidth, pan._offset + gesture.dx));
-      pan.setValue(newPosition - pan._offset);
-      const newValue = calculateValue(newPosition);
-      setValue(newValue);
-      if (onValueChange) {
-        onValueChange(newValue);
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        // Store the current value as offset
+        pan.extractOffset();
+        panOffset.current = calculateThumbPosition(value);
+      },
+      onPanResponderMove: (_, gesture) => {
+        // Calculate new position within bounds
+        const newPosition = Math.max(0, Math.min(sliderWidth, panOffset.current + gesture.dx));
+        pan.setValue(newPosition);
+        
+        // Calculate and update the value
+        const newValue = calculateValue(newPosition);
+        setValue(newValue);
+        if (onValueChange) {
+          onValueChange(newValue);
+        }
+      },
+      onPanResponderRelease: () => {
+        // Update the offset for next interaction
+        panOffset.current = calculateThumbPosition(value);
+        pan.flattenOffset();
       }
-    },
-    onPanResponderRelease: () => {
-      pan.flattenOffset();
-    }
-  });
+    })
+  ).current;
 
-  // Update the thumb position when the value changes
+  // Update the thumb position when the value or slider width changes
   useEffect(() => {
     if (sliderWidth > 0) {
       const position = calculateThumbPosition(value);
       pan.setValue(position);
+      panOffset.current = position;
     }
-  }, [value, sliderWidth]);
+  }, [value, sliderWidth, minValue, maxValue]);
+
+  // Initialize the component with proper values
+  useEffect(() => {
+    // Set initial value when component mounts or when initialValue changes
+    setValue(initialValue);
+    
+    // Cleanup function to prevent memory leaks
+    return () => {
+      pan.removeAllListeners();
+    };
+  }, [initialValue]);
 
   return (
     <View style={styles.container}>
@@ -61,8 +82,11 @@ const BudgetSlider = ({ minValue = 100000, maxValue = 1000000, initialValue = 50
         onLayout={(event) => {
           const { width } = event.nativeEvent.layout;
           setSliderWidth(width);
-          const position = calculateThumbPosition(value);
-          pan.setValue(position);
+          // Only set position if width has changed
+          if (width > 0) {
+            const position = calculateThumbPosition(value);
+            pan.setValue(position);
+          }
         }}
       >
         <View style={styles.sliderTrack} />
