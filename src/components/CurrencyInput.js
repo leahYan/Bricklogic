@@ -60,28 +60,37 @@ const CurrencyInput = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 8,
-    overflow: 'hidden',
+    borderColor: theme.colors.accent,
+    borderRadius: theme.borderRadius.medium,
+    paddingHorizontal: 12,
+    height: 50,
+    marginBottom: 16,
+    backgroundColor: theme.colors.inputBackground,
   },
   input: {
     flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 16,
+    fontSize: theme.typography.fontSize.medium,
+    color: theme.colors.text,
   },
   currencySelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingLeft: 12,
     borderLeftWidth: 1,
-    borderLeftColor: '#E0E0E0',
+    borderLeftColor: theme.colors.accent,
   },
   currencyText: {
-    fontSize: 16,
-    color: '#0066FF',
+    fontSize: theme.typography.fontSize.medium,
+    fontWeight: '500',
+    color: theme.colors.accent,
     marginRight: 4,
+  },
+  errorText: {
+    color: theme.colors.error,
+    fontSize: theme.typography.fontSize.small,
+    marginTop: 4,
   },
 });
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { theme } from '../theme/theme';
 
 const RadioButton = ({ 
   label, 
@@ -25,13 +26,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    backgroundColor: theme.colors.inputBackground,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.medium,
   },
   radioButton: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#0066FF',
+    borderColor: theme.colors.accent,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -40,11 +44,11 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#0066FF',
+    backgroundColor: theme.colors.accent,
   },
   label: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: theme.typography.fontSize.medium,
+    color: theme.colors.text,
   },
 });
 
