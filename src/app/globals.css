@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --accent-rgb: 255, 215, 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 0, 0, 0;
+    --accent-rgb: 255, 215, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent text-black font-bold py-3 px-6 rounded-md hover:bg-accent-dark transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-input-bg text-text font-bold py-3 px-6 rounded-md border border-accent hover:bg-accent hover:text-black transition-colors;
+  }
+
+  .input-field {
+    @apply bg-input-bg text-input-text border border-accent rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-accent;
+  }
+
+  .card {
+    @apply bg-input-bg rounded-lg p-4 shadow-md;
+  }
+
+  .progress-bar {
+    @apply h-1.5 bg-progress-track rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-progress-fill rounded-full;
+  }
+}
