@@ -9,9 +9,8 @@ const nextConfig = {
   },
   // Ensure Next.js works with Capacitor
   output: 'export',
-  // Disable server components for Capacitor compatibility
+  // Next.js 14+ uses App Router by default
   experimental: {
-    appDir: false,
     serverComponentsExternalPackages: [],
   },
   // Disable server-side features for static export

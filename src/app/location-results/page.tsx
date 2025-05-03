@@ -73,10 +73,23 @@ export default function LocationResultsPage() {
   }, [selectedState]);
 
   // Handle location selection
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  
   const handleLocationSelect = (location: Location) => {
+    setSelectedLocation(location);
     // In a real app, navigate to suburb detail page
     console.log('Selected location:', location);
     // router.push(`/suburb-detail?location=${encodeURIComponent(JSON.stringify(location))}`);
+  };
+  
+  // Handle continue button press
+  const handleContinue = () => {
+    // Navigate to the broker connection screen with the selected location
+    const params = new URLSearchParams();
+    if (selectedLocation) {
+      params.set('locationName', selectedLocation.name);
+    }
+    router.push(`/broker-connection?${params.toString()}`);
   };
 
   return (
@@ -159,6 +172,16 @@ export default function LocationResultsPage() {
               <p className="text-input-text">No locations found matching your criteria</p>
             </div>
           )}
+        </div>
+        
+        {/* Continue Button */}
+        <div className="mt-8">
+          <button
+            className="w-full bg-accent hover:bg-accent-dark text-black font-bold py-3 px-4 rounded-lg"
+            onClick={handleContinue}
+          >
+            Continue to Financing Options
+          </button>
         </div>
       </div>
     </main>
