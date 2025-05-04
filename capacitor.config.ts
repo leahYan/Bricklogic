@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Bricklogic',
   webDir: 'out',
   server: {
-    androidScheme: 'https',
-    hostname: 'localhost'
+    androidScheme: 'https'
+    // hostname property removed as it's not supported in this version
   },
   plugins: {
     SplashScreen: {
@@ -16,8 +16,7 @@ const config: CapacitorConfig = {
       spinnerColor: '#FFD700',
     },
   },
-  // Ensure proper handling of paths in the app
-  cordova: {}
+  // Removed cordova property as it's not supported in this version
 };
 
 export default config;

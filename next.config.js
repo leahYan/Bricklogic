@@ -11,12 +11,14 @@ const nextConfig = {
   output: 'export',
   // Next.js 14+ uses App Router by default
   experimental: {
-    serverComponentsExternalPackages: [],
+    // Remove any experimental features that might be causing issues
+    esmExternals: 'loose', // Add this to help with module resolution
   },
   // Disable server-side features for static export
   trailingSlash: true,
   // Ensure assets are properly referenced
   assetPrefix: './',
+  transpilePackages: ['react-native', 'react-native-reanimated'] // Add required packages for transpilation
 };
 
 module.exports = nextConfig;
