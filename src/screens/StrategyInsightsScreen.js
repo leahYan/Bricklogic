@@ -39,8 +39,7 @@ const StrategyInsightsScreen = ({ navigation, route }) => {
   const availablePriorities = [
     "Prioritise Capital Growth",
     "Prioritise Yield",
-    "Balanced Investment",
-    "Prioritise Affordability"
+    "Balanced Investment"
   ];
 
   // State for selected priorities (limit to 2 for MVP)

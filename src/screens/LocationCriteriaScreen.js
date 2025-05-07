@@ -20,6 +20,7 @@ const LocationCriteriaScreen = ({ navigation, route }) => {
 
   // Available states in Australia
   const australianStates = [
+    'All',
     'NSW',
     'VIC',
     'QLD',
@@ -64,10 +65,10 @@ const LocationCriteriaScreen = ({ navigation, route }) => {
 
         {/* Progress indicator */}
         <View style={styles.progressContainer}>
-          <Text style={styles.stepText}>Step 3 of 3</Text>
+          <Text style={styles.stepText}>Step 2 of 3</Text>
           <Text style={styles.preferencesText}>Find Matching Locations</Text>
           <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: '100%' }]} />
+            <View style={[styles.progressFill, { width: '66%' }]} />
           </View>
         </View>
 

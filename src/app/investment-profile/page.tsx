@@ -8,7 +8,6 @@ export default function InvestmentProfilePage() {
   const router = useRouter();
   const [goal, setGoal] = useState<string>('First Home');
   const [budgetRange, setBudgetRange] = useState<string>('$500k-$700k');
-  const [state, setState] = useState<string>('NSW');
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
   // Available options
@@ -19,21 +18,11 @@ export default function InvestmentProfilePage() {
     '$900k-$1.1M',
     '$1.1M-$1.4M'
   ];
-  const australianStates = [
-    'NSW',
-    'VIC',
-    'QLD',
-    'WA',
-    'SA',
-    'TAS',
-    'ACT',
-    'NT'
-  ];
 
   // Handle continue button press
   const handleContinue = () => {
     // Validate form
-    if (!goal || !budgetRange || !state) {
+    if (!goal || !budgetRange) {
       setIsFormValid(false);
       return;
     }
@@ -41,12 +30,11 @@ export default function InvestmentProfilePage() {
     // Store user profile data (in a real app, this would be saved to a database)
     localStorage.setItem('userProfile', JSON.stringify({
       goal,
-      budgetRange,
-      state
+      budgetRange
     }));
 
-    // Navigate to Strategy Insights screen
-    router.push('/strategy-insights');
+    // Navigate to Investment Timeframe screen
+    router.push('/investment-timeframe');
   };
 
   return (
@@ -95,24 +83,10 @@ export default function InvestmentProfilePage() {
             </div>
           </div>
 
-          {/* State Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium">State</label>
-            <div className="grid grid-cols-2 gap-2">
-              {australianStates.map((stateOption) => (
-                <button
-                  key={stateOption}
-                  className={`p-3 rounded-lg border ${state === stateOption ? 'border-accent bg-input-bg' : 'border-gray-700 bg-transparent'}`}
-                  onClick={() => setState(stateOption)}
-                >
-                  {stateOption}
-                </button>
-              ))}
-            </div>
-          </div>
+
 
           {!isFormValid && (
-            <p className="text-error text-sm">Please complete all fields before continuing.</p>
+            <p className="text-error text-sm">Please select a property goal and budget range before continuing.</p>
           )}
         </div>
 

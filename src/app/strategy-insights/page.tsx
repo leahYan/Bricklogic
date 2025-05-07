@@ -1,69 +1,105 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import { InvestmentPriority } from '@/types';
 
 // Strategy archetypes data (static for MVP)
 const strategyArchetypes = [
   {
-    archetypeName: "Growth Focus",
-    description: "Strategies focusing on areas expected to increase in value over time. This approach prioritizes capital appreciation over immediate rental returns.",
-    prosCons: "Pros: Potential for higher long-term returns. Cons: May have lower rental yield initially and require stronger cash flow position.",
-    associatedPriority: "Prioritise Capital Growth"
+    archetypeName: "Passive Income Generation",
+    description: "Strategies focused on acquiring properties that generate consistent rental income to supplement current earnings.",
+    prosCons: "Pros: Provides regular cash flow, can contribute to financial independence. Cons: Requires managing tenants and property, potential for vacancies and maintenance costs.",
+    associatedPriority: "Passive Income"
   },
   {
-    archetypeName: "Yield Focus",
-    description: "Strategies focusing on properties generating strong rental income relative to cost. This approach aims to maximize cash flow from day one.",
-    prosCons: "Pros: Positive cash flow potential and lower holding costs. Cons: Capital growth might be slower in some high-yield areas.",
-    associatedPriority: "Prioritise Yield"
+    archetypeName: "Capital Appreciation (Growth)",
+    description: "Strategies focused on identifying properties with strong potential for increasing in value over time, aiming for a profitable sale in the future.",
+    prosCons: "Pros: Potential for significant returns when the property is sold. Cons: Income from rent may be lower, reliant on market conditions for value increases.",
+    associatedPriority: "Capital Growth"
   },
   {
-    archetypeName: "Balanced Approach",
-    description: "Strategies that seek a middle ground between growth and yield. This approach aims for moderate performance in both capital growth and rental returns.",
-    prosCons: "Pros: More balanced investment profile with less volatility. Cons: May not maximize either growth or yield compared to specialized strategies.",
-    associatedPriority: "Balanced Investment"
+    archetypeName: "Personal Use/Future Residence",
+    description: "Strategies focused on purchasing a property with the primary intention of living in it now or in the future (e.g., retirement home, family home).",
+    prosCons: "Pros: Provides housing security, potential for long-term value growth, personal enjoyment. Cons: May not prioritize immediate financial returns, significant upfront costs and ongoing expenses.",
+    associatedPriority: "Personal Use"
+  },
+  {
+    archetypeName: "Upgrading/Moving Up the Property Ladder",
+    description: "Strategies focused on purchasing a property with the intention of increasing equity and eventually selling to purchase a more desirable or larger property.",
+    prosCons: "Pros: Opportunity to live in different types of properties over time, potential for wealth growth with each move. Cons: Transaction costs associated with buying and selling, market timing can impact outcomes.",
+    associatedPriority: "Property Ladder"
   }
 ];
 
+// No additional priorities outside of strategy archetypes
+
 export default function StrategyInsightsPage() {
   const router = useRouter();
-  const [selectedPriorities, setSelectedPriorities] = useState<InvestmentPriority[]>([]);
+  const searchParams = useSearchParams();
   
-  // Available priorities
-  const priorities: InvestmentPriority[] = [
-    'Prioritise Capital Growth',
-    'Prioritise Yield',
-    'Balanced Investment',
-    'Prioritise Affordability'
-  ];
+  // Get parameters from URL
+  const timeframeParam = searchParams.get('timeframe');
+  const incomeParam = searchParams.get('income');
+  const debtsParam = searchParams.get('debts');
+  const savingsParam = searchParams.get('savings');
+  const riskToleranceParam = searchParams.get('riskTolerance');
+  const capitalAllocationParam = searchParams.get('capitalAllocation');
+  
+  const [primaryPriority, setPrimaryPriority] = useState<InvestmentPriority | null>(null);
+  const [secondaryPriority, setSecondaryPriority] = useState<InvestmentPriority | null>(null);
 
-  // Handle priority selection
-  const handlePrioritySelect = (priority: InvestmentPriority) => {
-    if (selectedPriorities.includes(priority)) {
-      // Remove if already selected
-      setSelectedPriorities(selectedPriorities.filter(p => p !== priority));
+  // Handle primary priority selection
+  const handlePrimaryPrioritySelect = (priority: InvestmentPriority) => {
+    if (primaryPriority === priority) {
+      // Deselect if already selected
+      setPrimaryPriority(null);
+      setSecondaryPriority(null); // Reset secondary when primary is deselected
     } else {
-      // Add if not selected, but limit to 2 selections
-      if (selectedPriorities.length < 2) {
-        setSelectedPriorities([...selectedPriorities, priority]);
+      // If selecting a new primary that was previously secondary, clear secondary
+      if (secondaryPriority === priority) {
+        setSecondaryPriority(null);
       }
+      setPrimaryPriority(priority);
+    }
+  };
+  
+  // Handle secondary priority selection
+  const handleSecondaryPrioritySelect = (priority: InvestmentPriority) => {
+    if (secondaryPriority === priority) {
+      // Deselect if already selected
+      setSecondaryPriority(null);
+    } else {
+      setSecondaryPriority(priority);
     }
   };
 
   // Handle next button press
   const handleNext = () => {
-    if (selectedPriorities.length === 0) {
-      // Require at least one priority
+    if (!primaryPriority) {
+      // Require at least primary priority
       return;
     }
 
-    // Navigate to Location Criteria screen with selected priorities
+    // Create array of selected priorities
+    const selectedPriorities = secondaryPriority 
+      ? [primaryPriority, secondaryPriority]
+      : [primaryPriority];
+
+    // Navigate to Financial Details screen with selected priorities and investment details
     const params = new URLSearchParams();
     params.set('priorities', encodeURIComponent(JSON.stringify(selectedPriorities)));
     
-    router.push(`/location-criteria?${params.toString()}`);
+    // Pass along the investment timeframe parameters
+    if (timeframeParam) params.set('timeframe', timeframeParam);
+    if (incomeParam) params.set('income', incomeParam);
+    if (debtsParam) params.set('debts', debtsParam);
+    if (savingsParam) params.set('savings', savingsParam);
+    if (riskToleranceParam) params.set('riskTolerance', riskToleranceParam);
+    if (capitalAllocationParam) params.set('capitalAllocation', capitalAllocationParam);
+    
+    router.push(`/financial-details?${params.toString()}`);
   };
 
   return (
@@ -73,6 +109,7 @@ export default function StrategyInsightsPage() {
         currentStep={2}
         totalSteps={4}
         stepDescription="Explore Approaches"
+        showBackButton={true}
       />
       
       <div className="flex-1 p-4 flex flex-col">
@@ -82,32 +119,56 @@ export default function StrategyInsightsPage() {
         </p>
         
         <div className="space-y-6 flex-1">
-          {/* Strategy Archetype Cards */}
+          {/* Strategy Archetype Cards - Clickable for Primary Priority */}
           <div className="space-y-4">
             {strategyArchetypes.map((strategy) => (
-              <div key={strategy.archetypeName} className="p-4 rounded-lg border border-gray-700 bg-input-bg">
+              <div 
+                key={strategy.archetypeName} 
+                className={`p-4 rounded-lg border cursor-pointer ${primaryPriority === strategy.associatedPriority ? 'border-accent bg-input-bg' : 'border-gray-700 bg-input-bg hover:border-gray-500'}`}
+                onClick={() => handlePrimaryPrioritySelect(strategy.associatedPriority)}
+              >
                 <h3 className="text-lg font-semibold text-accent mb-2">{strategy.archetypeName}</h3>
                 <p className="text-sm mb-3">{strategy.description}</p>
                 <p className="text-xs text-gray-400">{strategy.prosCons}</p>
+                {primaryPriority === strategy.associatedPriority && (
+                  <div className="mt-2 inline-block px-3 py-1 bg-accent/20 text-accent text-xs rounded-full">
+                    Selected as Primary Focus
+                  </div>
+                )}
               </div>
             ))}
+            
+            {/* No additional priority options */}
           </div>
 
-          {/* Priority Selection */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Select Your Priorities (Max 2)</h3>
-            <div className="flex flex-wrap gap-2">
-              {priorities.map((priority) => (
-                <button
-                  key={priority}
-                  className={`px-3 py-2 rounded-full text-sm ${selectedPriorities.includes(priority) ? 'bg-accent text-black' : 'bg-input-bg text-white border border-gray-700'}`}
-                  onClick={() => handlePrioritySelect(priority)}
-                >
-                  {priority}
-                </button>
-              ))}
+          {/* Secondary Priority Selection - only show if primary is selected */}
+          {primaryPriority && (
+            <div className="space-y-2 mt-6">
+              <h3 className="text-lg font-semibold">Your Second Priority (Optional)</h3>
+              <div className="space-y-3">
+                {/* Show strategy archetypes that aren't selected as primary */}
+                {strategyArchetypes
+                  .filter(strategy => strategy.associatedPriority !== primaryPriority)
+                  .map((strategy) => (
+                    <div 
+                      key={`secondary-${strategy.archetypeName}`} 
+                      className={`p-3 rounded-lg border cursor-pointer ${secondaryPriority === strategy.associatedPriority ? 'border-accent bg-input-bg' : 'border-gray-700 bg-input-bg hover:border-gray-500'}`}
+                      onClick={() => handleSecondaryPrioritySelect(strategy.associatedPriority)}
+                    >
+                      <h3 className="text-sm font-semibold text-accent">{strategy.archetypeName}</h3>
+                      <p className="text-xs text-gray-300">{strategy.description.split('.')[0]}.</p>
+                      {secondaryPriority === strategy.associatedPriority && (
+                        <div className="mt-2 inline-block px-2 py-1 bg-accent/20 text-accent text-xs rounded-full">
+                          Selected as Secondary
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                
+                {/* No additional priority options */}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Disclaimer */}
           <div className="bg-gray-800 p-3 rounded-lg">
@@ -118,9 +179,9 @@ export default function StrategyInsightsPage() {
         </div>
 
         <button
-          className={`w-full py-3 px-4 rounded-lg mt-6 font-bold ${selectedPriorities.length > 0 ? 'bg-accent hover:bg-accent-dark text-black' : 'bg-gray-700 text-gray-400 cursor-not-allowed'}`}
+          className={`w-full py-3 px-4 rounded-lg mt-6 font-bold ${primaryPriority ? 'bg-accent hover:bg-accent-dark text-black' : 'bg-gray-700 text-gray-400 cursor-not-allowed'}`}
           onClick={handleNext}
-          disabled={selectedPriorities.length === 0}
+          disabled={!primaryPriority}
         >
           Next: Find Locations
         </button>

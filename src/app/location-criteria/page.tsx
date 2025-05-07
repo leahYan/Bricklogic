@@ -10,8 +10,17 @@ export default function LocationCriteriaPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // Get selected priorities from URL params
+  // Get parameters from URL
   const prioritiesParam = searchParams.get('priorities');
+  const timeframeParam = searchParams.get('timeframe');
+  const incomeParam = searchParams.get('income');
+  const expensesParam = searchParams.get('expenses');
+  const liabilitiesParam = searchParams.get('liabilities');
+  const debtsParam = searchParams.get('debts');
+  const savingsParam = searchParams.get('savings');
+  const riskToleranceParam = searchParams.get('riskTolerance');
+  const capitalAllocationParam = searchParams.get('capitalAllocation');
+  
   const selectedPriorities = prioritiesParam 
     ? JSON.parse(decodeURIComponent(prioritiesParam)) as InvestmentPriority[]
     : [];
@@ -39,11 +48,21 @@ export default function LocationCriteriaPage() {
 
   // Handle find locations button press
   const handleFindLocations = () => {
-    // Navigate to Location Results screen with criteria
+    // Navigate to Location Results screen with all criteria
     const params = new URLSearchParams();
     params.set('priorities', encodeURIComponent(JSON.stringify(selectedPriorities)));
     params.set('state', state);
     params.set('budget', budget.toString());
+    
+    // Pass along the investment timeframe parameters
+    if (timeframeParam) params.set('timeframe', timeframeParam);
+    if (incomeParam) params.set('income', incomeParam);
+    if (expensesParam) params.set('expenses', expensesParam);
+    if (liabilitiesParam) params.set('liabilities', liabilitiesParam);
+    if (debtsParam) params.set('debts', debtsParam);
+    if (savingsParam) params.set('savings', savingsParam);
+    if (riskToleranceParam) params.set('riskTolerance', riskToleranceParam);
+    if (capitalAllocationParam) params.set('capitalAllocation', capitalAllocationParam);
     
     router.push(`/location-results?${params.toString()}`);
   };
@@ -52,8 +71,8 @@ export default function LocationCriteriaPage() {
     <main className="flex min-h-screen flex-col bg-background">
       <Navigation 
         title="Location Criteria" 
-        currentStep={3}
-        totalSteps={3}
+        currentStep={4}
+        totalSteps={4}
         stepDescription="Find Matching Locations"
       />
       
@@ -73,13 +92,13 @@ export default function LocationCriteriaPage() {
         {/* State Selection */}
         <div className="mb-6">
           <h2 className="text-base font-bold mb-2">Select State</h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex justify-center items-center gap-3 flex-wrap">
             {australianStates.map((stateOption, index) => (
               <button
                 key={index}
-                className={`px-4 py-2 rounded-full border ${state === stateOption 
-                  ? 'bg-accent text-black border-accent' 
-                  : 'bg-transparent text-text border-gray-600'}`}
+                className={`w-16 h-16 flex items-center justify-center rounded-full ${state === stateOption 
+                  ? 'bg-accent text-black font-bold' 
+                  : 'bg-black/30 text-text border border-gray-700'}`}
                 onClick={() => handleStateSelect(stateOption)}
               >
                 {stateOption}

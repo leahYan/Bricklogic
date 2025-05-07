@@ -96,8 +96,8 @@ export default function LocationResultsPage() {
     <main className="flex min-h-screen flex-col bg-background">
       <Navigation 
         title="Location Results" 
-        currentStep={3}
-        totalSteps={3}
+        currentStep={4}
+        totalSteps={4}
         stepDescription="Matching Locations"
       />
       

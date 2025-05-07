@@ -16,10 +16,10 @@ export interface Location {
 
 // Investment priority types
 export type InvestmentPriority = 
-  | 'Prioritise Capital Growth'
-  | 'Prioritise Yield'
-  | 'Balanced Investment'
-  | 'Prioritise Affordability';
+  | 'Passive Income'
+  | 'Capital Growth'
+  | 'Personal Use'
+  | 'Property Ladder';
 
 // Property types
 export type PropertyType = 'house' | 'unit';

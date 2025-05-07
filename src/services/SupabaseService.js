@@ -57,7 +57,7 @@ export const fetchLocations = async (state, minBudget, maxBudget, priority, prop
       .eq('state', state)
       .gte(priceColumn, minBudget)
       .lte(priceColumn, maxBudget)
-      .order(orderColumn, { ascending: priority === 'Prioritise Affordability' });
+      .order(orderColumn, { ascending: false }); // Default to descending order (higher values first)
 
     if (error) throw error;
     
