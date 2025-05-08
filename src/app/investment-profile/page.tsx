@@ -33,8 +33,8 @@ export default function InvestmentProfilePage() {
       budgetRange
     }));
 
-    // Navigate to Investment Timeframe screen
-    router.push('/investment-timeframe');
+    // Navigate to Strategy Insights screen
+    router.push('/strategy-insights');
   };
 
   return (
@@ -43,7 +43,7 @@ export default function InvestmentProfilePage() {
         title="Your Property Goals" 
         showBackButton={false}
         currentStep={1}
-        totalSteps={4}
+        totalSteps={6}
         stepDescription="Basic Profile"
       />
       

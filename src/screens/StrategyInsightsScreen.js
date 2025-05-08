@@ -69,8 +69,8 @@ const StrategyInsightsScreen = ({ navigation, route }) => {
 
   // Handle next button press
   const handleNext = () => {
-    // Navigate to Location Criteria screen with selected priorities
-    navigation.navigate('LocationCriteria', { selectedPriorities });
+    // Navigate to Investment Profile screen with selected priorities
+    navigation.navigate('InvestmentProfile', { selectedPriorities });
   };
 
   return (
@@ -114,8 +114,8 @@ const StrategyInsightsScreen = ({ navigation, route }) => {
             onPress={() => {
               // Set the priority associated with this strategy
               setSelectedPriorities([strategy.associatedPriority]);
-              // Navigate to Location Criteria screen with the selected priority
-              navigation.navigate('LocationCriteria', { 
+              // Navigate to Investment Profile screen with the selected priority
+              navigation.navigate('InvestmentProfile', { 
                 selectedPriorities: [strategy.associatedPriority] 
               });
             }}

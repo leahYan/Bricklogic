@@ -53,12 +53,16 @@ export default function LocationResultsPage() {
   const prioritiesParam = searchParams.get('priorities');
   const stateParam = searchParams.get('state');
   const budgetParam = searchParams.get('budget');
+  const locationFactorsParam = searchParams.get('locationFactors');
   
   const selectedPriorities = prioritiesParam 
     ? JSON.parse(decodeURIComponent(prioritiesParam)) as InvestmentPriority[]
     : [];
   const selectedState = stateParam || 'NSW';
   const budget = budgetParam ? parseInt(budgetParam, 10) : 700000;
+  const locationFactors = locationFactorsParam
+    ? JSON.parse(decodeURIComponent(locationFactorsParam)) as string[]
+    : [];
 
   // Filter locations based on criteria
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
@@ -96,28 +100,51 @@ export default function LocationResultsPage() {
     <main className="flex min-h-screen flex-col bg-background">
       <Navigation 
         title="Location Results" 
-        currentStep={4}
-        totalSteps={4}
+        currentStep={6}
+        totalSteps={6}
         stepDescription="Matching Locations"
       />
       
       <div className="flex-1 px-5 pb-8 overflow-y-auto">
-        {/* Search Criteria Summary */}
+        {/* Selected Criteria Summary */}
         <div className="mb-6">
           <h2 className="text-base font-bold mb-2">Your Search Criteria</h2>
-          <div className="bg-card p-4 rounded-lg">
-            <div className="flex justify-between mb-2">
-              <span className="text-input-text">State:</span>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-gray-400">State:</span>
               <span className="font-medium">{selectedState}</span>
             </div>
-            <div className="flex justify-between mb-2">
-              <span className="text-input-text">Budget:</span>
-              <span className="font-medium">${budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Budget:</span>
+              <span className="font-medium">${budget.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-input-text">Priorities:</span>
-              <span className="font-medium text-right">{selectedPriorities.join(', ')}</span>
+              <span className="text-gray-400">Priorities:</span>
+              <div className="text-right">
+                {selectedPriorities.map((priority, index) => (
+                  <div key={index}>{priority}</div>
+                ))}
+              </div>
             </div>
+            {locationFactors.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-400">Location Factors:</span>
+                <div className="text-right">
+                  {locationFactors.map((factor, index) => {
+                    // Convert factor IDs to readable labels
+                    const factorLabels: {[key: string]: string} = {
+                      'schools': 'Schools',
+                      'transport': 'Public Transport',
+                      'shops': 'Shopping Centers',
+                      'airport': 'Airport Proximity'
+                    };
+                    return (
+                      <div key={index}>{factorLabels[factor] || factor}</div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

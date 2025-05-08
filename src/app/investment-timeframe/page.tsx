@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import { InvestmentPriority } from '@/types';
+import { IoWarningOutline } from 'react-icons/io5';
 
 // Define types for investment timeframe and risk tolerance
 type InvestmentTimeframe = 'short' | 'medium' | 'long' | 'very-long' | 'undecided';
@@ -24,6 +25,7 @@ export default function InvestmentTimeframePage() {
   const [riskTolerance, setRiskTolerance] = useState<RiskTolerance>('moderate');
   const [capitalAllocation, setCapitalAllocation] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
+  const [showRiskDialog, setShowRiskDialog] = useState<boolean>(false);
 
   // Handle continue button press
   const handleContinue = () => {
@@ -33,14 +35,14 @@ export default function InvestmentTimeframePage() {
       return;
     }
 
-    // Navigate to Strategy Insights screen with selected priorities and timeframe details
+    // Navigate to Financial Details screen with selected priorities and timeframe details
     const params = new URLSearchParams();
     params.set('priorities', prioritiesParam || '');
     params.set('timeframe', timeframe);
     params.set('riskTolerance', riskTolerance);
     params.set('capitalAllocation', capitalAllocation);
     
-    router.push(`/strategy-insights?${params.toString()}`);
+    router.push(`/financial-details?${params.toString()}`);
   };
 
   return (
@@ -48,7 +50,7 @@ export default function InvestmentTimeframePage() {
       <Navigation 
         title="Investment Details" 
         currentStep={3}
-        totalSteps={4}
+        totalSteps={6}
         stepDescription="Your Investment Profile"
       />
       
@@ -117,7 +119,13 @@ export default function InvestmentTimeframePage() {
                       name="riskTolerance"
                       value={option.value}
                       checked={riskTolerance === option.value}
-                      onChange={() => setRiskTolerance(option.value as RiskTolerance)}
+                      onChange={() => {
+                      if (option.value === 'aggressive') {
+                        setShowRiskDialog(true);
+                      } else {
+                        setRiskTolerance(option.value as RiskTolerance);
+                      }
+                    }}
                       className="mr-2"
                     />
                     <label htmlFor={`risk-${option.value}`} className="font-medium">{option.label}</label>
@@ -146,6 +154,45 @@ export default function InvestmentTimeframePage() {
             <p className="text-error text-sm">Please select a timeframe or provide your income before continuing.</p>
           )}
 
+          {/* Risk Tolerance Confirmation Dialog */}
+          {showRiskDialog && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+              <div className="bg-gray-800 rounded-lg p-5 max-w-md w-full">
+                <div className="flex items-center mb-4 text-warning">
+                  <IoWarningOutline size={24} className="mr-2" />
+                  <h3 className="text-lg font-bold">Aggressive Risk Profile</h3>
+                </div>
+                <p className="mb-4 text-sm">
+                  An aggressive risk profile means you're willing to accept:
+                </p>
+                <ul className="list-disc pl-5 mb-4 text-sm space-y-1">
+                  <li>Potential for significant capital loss</li>
+                  <li>Higher volatility in property value</li>
+                  <li>Possible extended vacancy periods</li>
+                  <li>Unexpected maintenance or repair costs</li>
+                  <li>Market downturns that may take years to recover from</li>
+                </ul>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <button 
+                    className="px-4 py-2 border border-gray-600 rounded-lg"
+                    onClick={() => setShowRiskDialog(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="px-4 py-2 bg-warning text-black rounded-lg font-medium"
+                    onClick={() => {
+                      setRiskTolerance('aggressive');
+                      setShowRiskDialog(false);
+                    }}
+                  >
+                    I Understand the Risks
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Disclaimer */}
           <div className="bg-gray-800 p-3 rounded-lg">
             <p className="text-xs text-gray-400">
@@ -159,7 +206,7 @@ export default function InvestmentTimeframePage() {
           onClick={handleContinue}
           disabled={!isFormValid}
         >
-          Next: Strategy Insights
+          Next: Financial Details
         </button>
       </div>
     </main>

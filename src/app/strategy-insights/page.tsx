@@ -87,11 +87,11 @@ export default function StrategyInsightsPage() {
       ? [primaryPriority, secondaryPriority]
       : [primaryPriority];
 
-    // Navigate to Financial Details screen with selected priorities and investment details
+    // Navigate to Investment Timeframe screen with selected priorities
     const params = new URLSearchParams();
     params.set('priorities', encodeURIComponent(JSON.stringify(selectedPriorities)));
     
-    // Pass along the investment timeframe parameters
+    // Pass along any existing parameters
     if (timeframeParam) params.set('timeframe', timeframeParam);
     if (incomeParam) params.set('income', incomeParam);
     if (debtsParam) params.set('debts', debtsParam);
@@ -99,7 +99,7 @@ export default function StrategyInsightsPage() {
     if (riskToleranceParam) params.set('riskTolerance', riskToleranceParam);
     if (capitalAllocationParam) params.set('capitalAllocation', capitalAllocationParam);
     
-    router.push(`/financial-details?${params.toString()}`);
+    router.push(`/investment-timeframe?${params.toString()}`);
   };
 
   return (
@@ -107,7 +107,7 @@ export default function StrategyInsightsPage() {
       <Navigation 
         title="Strategy Insights" 
         currentStep={2}
-        totalSteps={4}
+        totalSteps={6}
         stepDescription="Explore Approaches"
         showBackButton={true}
       />
@@ -183,7 +183,7 @@ export default function StrategyInsightsPage() {
           onClick={handleNext}
           disabled={!primaryPriority}
         >
-          Next: Find Locations
+          Next: Investment Details
         </button>
       </div>
     </main>

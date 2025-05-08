@@ -65,10 +65,10 @@ const LocationCriteriaScreen = ({ navigation, route }) => {
 
         {/* Progress indicator */}
         <View style={styles.progressContainer}>
-          <Text style={styles.stepText}>Step 2 of 3</Text>
+          <Text style={styles.stepText}>Step 5 of 6</Text>
           <Text style={styles.preferencesText}>Find Matching Locations</Text>
           <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: '66%' }]} />
+            <View style={[styles.progressFill, { width: '83.3%' }]} />
           </View>
         </View>
 

@@ -3,8 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Import screens
-import InvestmentProfileScreen from '../screens/InvestmentProfileScreen';
+import PropertyGoalsScreen from '../screens/PropertyGoalsScreen';
 import StrategyInsightsScreen from '../screens/StrategyInsightsScreen';
+import InvestmentProfileScreen from '../screens/InvestmentProfileScreen';
+import FinancialDetailsScreen from '../screens/FinancialDetailsScreen';
 import LocationCriteriaScreen from '../screens/LocationCriteriaScreen';
 import LocationResultsScreen from '../screens/LocationResultsScreen';
 import SuburbDetailScreen from '../screens/SuburbDetailScreen';
@@ -17,7 +19,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="InvestmentProfile"
+        initialRouteName="PropertyGoals"
         screenOptions={{
           headerShown: false,
           cardStyle: { backgroundColor: '#FFFFFF' },
@@ -38,8 +40,10 @@ const AppNavigator = () => {
           })
         }}
       >
-        <Stack.Screen name="InvestmentProfile" component={InvestmentProfileScreen} />
+        <Stack.Screen name="PropertyGoals" component={PropertyGoalsScreen} />
         <Stack.Screen name="StrategyInsights" component={StrategyInsightsScreen} />
+        <Stack.Screen name="InvestmentProfile" component={InvestmentProfileScreen} />
+        <Stack.Screen name="FinancialDetails" component={FinancialDetailsScreen} />
         <Stack.Screen name="LocationCriteria" component={LocationCriteriaScreen} />
         <Stack.Screen name="LocationResults" component={LocationResultsScreen} />
         <Stack.Screen name="SuburbDetail" component={SuburbDetailScreen} />

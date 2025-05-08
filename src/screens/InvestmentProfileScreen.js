@@ -89,8 +89,13 @@ const InvestmentProfileScreen = ({ navigation }) => {
       }
     });
     
-    // Navigate to the next screen (Strategy Insights)
-    navigation.navigate('StrategyInsights');
+    // Navigate to the next screen (Financial Details)
+    navigation.navigate('FinancialDetails', { 
+      budget, 
+      cashAvailable, 
+      location, 
+      investmentGoal 
+    });
   };
 
   return (
@@ -98,7 +103,10 @@ const InvestmentProfileScreen = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header with back button */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
             <Ionicons name="arrow-back" size={24} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Investment Profile</Text>
@@ -109,10 +117,10 @@ const InvestmentProfileScreen = ({ navigation }) => {
 
         {/* Progress indicator */}
         <View style={styles.progressContainer}>
-          <Text style={styles.stepText}>Step 1 of 3</Text>
+          <Text style={styles.stepText}>Step 3 of 6</Text>
           <Text style={styles.preferencesText}>Investment Preferences</Text>
           <View style={styles.progressBar}>
-            <View style={styles.progressFill} />
+            <View style={[styles.progressFill, { width: '50%' }]} />
           </View>
         </View>
 

@@ -25,7 +25,10 @@ export default function FinancialDetailsPage() {
   const [income, setIncome] = useState<string>('');
   const [expenses, setExpenses] = useState<string>('');
   const [liabilities, setLiabilities] = useState<string>('');
+  const [savings, setSavings] = useState<string>('');
+  const [otherAssets, setOtherAssets] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
+  const [showOptionalFields, setShowOptionalFields] = useState<boolean>(false);
 
   // Handle continue button press
   const handleContinue = () => {
@@ -42,6 +45,10 @@ export default function FinancialDetailsPage() {
     params.set('expenses', expenses);
     params.set('liabilities', liabilities);
     
+    // Add optional fields if they have values
+    if (savings) params.set('savings', savings);
+    if (otherAssets) params.set('otherAssets', otherAssets);
+    
     // Pass along the investment timeframe parameters
     if (timeframeParam) params.set('timeframe', timeframeParam);
     if (debtsParam) params.set('debts', debtsParam);
@@ -57,7 +64,7 @@ export default function FinancialDetailsPage() {
       <Navigation 
         title="Financial Details" 
         currentStep={4}
-        totalSteps={5}
+        totalSteps={6}
         stepDescription="Your Financial Position"
       />
       
@@ -102,6 +109,7 @@ export default function FinancialDetailsPage() {
           {/* Liabilities Input */}
           <div className="space-y-2">
             <label htmlFor="liabilities" className="block text-sm font-medium">Existing Liabilities (total debt)</label>
+            <p className="text-xs text-gray-400 mb-2">Include car loans, personal loans, credit card debt, HECS/HELP, etc.</p>
             <input
               id="liabilities"
               type="text"
@@ -112,6 +120,52 @@ export default function FinancialDetailsPage() {
               onChange={(e) => setLiabilities(e.target.value.replace(/[^0-9]/g, ''))}
             />
           </div>
+          
+          {/* Toggle for Optional Fields */}
+          <button 
+            type="button"
+            className="text-accent text-sm flex items-center"
+            onClick={() => setShowOptionalFields(!showOptionalFields)}
+          >
+            {showOptionalFields ? 'Hide' : 'Show'} optional financial details
+          </button>
+          
+          {/* Optional Fields */}
+          {showOptionalFields && (
+            <div className="space-y-6 border border-gray-700 rounded-lg p-4 bg-gray-900">
+              <h3 className="text-sm font-medium text-gray-300">Optional Details</h3>
+              
+              {/* Savings Input */}
+              <div className="space-y-2">
+                <label htmlFor="savings" className="block text-sm font-medium">Savings</label>
+                <p className="text-xs text-gray-400 mb-2">Total amount in savings accounts</p>
+                <input
+                  id="savings"
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="e.g. 25000"
+                  className="w-full p-3 rounded-lg border border-gray-700 bg-input-bg text-text"
+                  value={savings}
+                  onChange={(e) => setSavings(e.target.value.replace(/[^0-9]/g, ''))}
+                />
+              </div>
+              
+              {/* Other Assets Input */}
+              <div className="space-y-2">
+                <label htmlFor="otherAssets" className="block text-sm font-medium">Other Assets</label>
+                <p className="text-xs text-gray-400 mb-2">Value of shares, existing properties, vehicles, etc.</p>
+                <input
+                  id="otherAssets"
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="e.g. 100000"
+                  className="w-full p-3 rounded-lg border border-gray-700 bg-input-bg text-text"
+                  value={otherAssets}
+                  onChange={(e) => setOtherAssets(e.target.value.replace(/[^0-9]/g, ''))}
+                />
+              </div>
+            </div>
+          )}
 
           {!isFormValid && (
             <p className="text-error text-sm">Please enter your annual income before continuing.</p>

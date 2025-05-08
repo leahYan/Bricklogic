@@ -120,6 +120,15 @@ const LocationResultsScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
+      {/* Progress indicator */}
+      <View style={styles.progressContainer}>
+        <Text style={styles.stepText}>Step 6 of 6</Text>
+        <Text style={styles.preferencesText}>Property Matches</Text>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: '100%' }]} />
+        </View>
+      </View>
+
       <View style={styles.criteriaContainer}>
         <Text style={styles.criteriaText}>
           {selectedPriorities.length > 0 
@@ -186,6 +195,30 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     padding: 5,
+  },
+  progressContainer: {
+    padding: 20,
+    paddingTop: 0,
+  },
+  stepText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  preferencesText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 3,
+    marginTop: 10,
+  },
+  progressFill: {
+    height: 6,
+    backgroundColor: '#4CAF50',
+    borderRadius: 3,
   },
   criteriaContainer: {
     padding: 20,

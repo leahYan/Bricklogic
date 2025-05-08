@@ -28,9 +28,11 @@ export default function LocationCriteriaPage() {
   // State for location criteria
   const [state, setState] = useState<string>('NSW'); // Default state
   const [budget, setBudget] = useState<number>(700000); // Default budget
+  const [locationFactors, setLocationFactors] = useState<string[]>([]);
 
   // Available states in Australia
   const australianStates = [
+    'All',
     'NSW',
     'VIC',
     'QLD',
@@ -46,13 +48,30 @@ export default function LocationCriteriaPage() {
     setState(selectedState);
   };
 
+  // Toggle location factor selection
+  const toggleLocationFactor = (factor: string) => {
+    setLocationFactors(prev => 
+      prev.includes(factor) 
+        ? prev.filter(item => item !== factor) 
+        : [...prev, factor]
+    );
+  };
+
   // Handle find locations button press
   const handleFindLocations = () => {
     // Navigate to Location Results screen with all criteria
     const params = new URLSearchParams();
     params.set('priorities', encodeURIComponent(JSON.stringify(selectedPriorities)));
-    params.set('state', state);
+    // Only set state parameter if a specific state is selected (not 'All')
+    if (state !== 'All') {
+      params.set('state', state);
+    }
     params.set('budget', budget.toString());
+    
+    // Add location factors if any are selected
+    if (locationFactors.length > 0) {
+      params.set('locationFactors', encodeURIComponent(JSON.stringify(locationFactors)));
+    }
     
     // Pass along the investment timeframe parameters
     if (timeframeParam) params.set('timeframe', timeframeParam);
@@ -71,8 +90,8 @@ export default function LocationCriteriaPage() {
     <main className="flex min-h-screen flex-col bg-background">
       <Navigation 
         title="Location Criteria" 
-        currentStep={4}
-        totalSteps={4}
+        currentStep={5}
+        totalSteps={6}
         stepDescription="Find Matching Locations"
       />
       
@@ -108,7 +127,7 @@ export default function LocationCriteriaPage() {
         </div>
 
         {/* Budget Range */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h2 className="text-base font-bold mb-2">Budget Range</h2>
           <BudgetSlider 
             minValue={500000}
@@ -116,6 +135,42 @@ export default function LocationCriteriaPage() {
             initialValue={budget}
             onValueChange={setBudget}
           />
+        </div>
+
+        {/* Location Factors */}
+        <div className="mb-8">
+          <h2 className="text-base font-bold mb-2">Location Factors (Optional)</h2>
+          <p className="text-sm text-gray-400 mb-3">Select factors that are important to you</p>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'schools', label: 'Schools' },
+              { id: 'transport', label: 'Public Transport' },
+              { id: 'shops', label: 'Shopping Centers' },
+              { id: 'airport', label: 'Airport Proximity' }
+            ].map((factor) => (
+              <div 
+                key={factor.id}
+                onClick={() => toggleLocationFactor(factor.id)}
+                className={`p-3 rounded-lg border ${locationFactors.includes(factor.id) 
+                  ? 'border-accent bg-accent/10 text-accent' 
+                  : 'border-gray-700 bg-black/30'} 
+                  flex items-center cursor-pointer`}
+              >
+                <div className={`w-5 h-5 rounded border mr-2 flex items-center justify-center ${locationFactors.includes(factor.id) 
+                  ? 'border-accent bg-accent text-black' 
+                  : 'border-gray-600'}`}
+                >
+                  {locationFactors.includes(factor.id) && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <span>{factor.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Find Locations Button */}
