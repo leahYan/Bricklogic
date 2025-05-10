@@ -87,7 +87,7 @@ export default function StrategyInsightsPage() {
       ? [primaryPriority, secondaryPriority]
       : [primaryPriority];
 
-    // Navigate to Investment Timeframe screen with selected priorities
+    // Navigate to Investment Profile screen with selected priorities
     const params = new URLSearchParams();
     params.set('priorities', encodeURIComponent(JSON.stringify(selectedPriorities)));
     
@@ -99,17 +99,17 @@ export default function StrategyInsightsPage() {
     if (riskToleranceParam) params.set('riskTolerance', riskToleranceParam);
     if (capitalAllocationParam) params.set('capitalAllocation', capitalAllocationParam);
     
-    router.push(`/investment-timeframe?${params.toString()}`);
+    router.push(`/investment-profile?${params.toString()}`);
   };
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-text">
       <Navigation 
         title="Strategy Insights" 
-        currentStep={2}
+        currentStep={1}
         totalSteps={6}
         stepDescription="Explore Approaches"
-        showBackButton={true}
+        showBackButton={false}
       />
       
       <div className="flex-1 p-4 flex flex-col">
@@ -183,7 +183,7 @@ export default function StrategyInsightsPage() {
           onClick={handleNext}
           disabled={!primaryPriority}
         >
-          Next: Investment Details
+          Next: Your Property Goals
         </button>
       </div>
     </main>

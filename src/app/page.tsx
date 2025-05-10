@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 export default function Home() {
   const router = useRouter();
 
-  // Redirect to the first screen in the flow (InvestmentProfile)
+  // Redirect to the first screen in the flow (Strategy Insights)
   useEffect(() => {
-    router.push('/investment-profile');
+    router.push('/strategy-insights');
   }, [router]);
 
   return (
